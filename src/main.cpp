@@ -1,9 +1,11 @@
 
-#include "interval.h"
 #include <cstdio>
 #include <iostream>
 #include <map>
 #include <vector>
+#include <string>
+
+using namespace std;
 
 int main() {
 

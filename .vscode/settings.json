@@ -46,7 +46,8 @@
     "xtr1common": "cpp",
     "xtree": "cpp",
     "xutility": "cpp",
-    "regex": "cpp"
+    "regex": "cpp",
+    "__verbose_abort": "cpp"
   },
   "python.linting.pylintEnabled": false,
   "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
