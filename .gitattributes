@@ -1,0 +1,5 @@
+# Auto-detect text files and normalize line endings
+*.tar.gz        filter=lfs diff=lfs merge=lfs -text
+*.docx        filter=lfs diff=lfs merge=lfs -text
+*.bin        filter=lfs diff=lfs merge=lfs -text
+*.ncb        filter=lfs diff=lfs merge=lfs -text
