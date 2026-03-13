@@ -80,7 +80,13 @@
     "stack": "cpp",
     "shared_mutex": "cpp",
     "thread": "cpp",
-    "__assert": "cpp"
+    "__assert": "cpp",
+    "condition_variable": "cpp",
+    "charconv": "cpp",
+    "complex": "cpp",
+    "fstream": "cpp",
+    "optional": "cpp",
+    "ratio": "cpp"
   },
   "python.linting.pylintEnabled": false,
   "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",

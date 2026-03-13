@@ -1,10 +1,9 @@
-
+#include <atomic>
+#include <condition_variable>
 #include <cstdio>
 #include <iostream>
 #include <list>
-#include <map>
 #include <mutex>
-#include <shared_mutex>
 #include <string>
 #include <thread>
 #include <vector>
@@ -15,8 +14,8 @@ enum State { Pending, Running, Completed };
 
 class Task {
 public:
+  Task() : state(Pending) {} // ✅ תיקון 1: אתחול state
   virtual void run() = 0;
-
   State state;
 };
 
@@ -60,9 +59,10 @@ public:
       lock.unlock();
 
       task->state = Running;
+
       task->run();
+
       task->state = Completed;
-      m_condition.notify_one();
     }
   }
 
@@ -71,7 +71,6 @@ public:
       unique_lock<mutex> lock(m_mutex);
       m_list.push_back(task);
     }
-
     m_condition.notify_one();
   }
 
@@ -84,8 +83,6 @@ private:
 };
 
 int main() {
-
   printf("Test\n");
-
   return 0;
 }
