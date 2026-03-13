@@ -63,6 +63,8 @@ public:
       task->run();
 
       task->state = Completed;
+
+      delete task;
     }
   }
 
