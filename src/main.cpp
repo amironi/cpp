@@ -22,11 +22,10 @@ public:
 
 class ThreadPool {
 public:
-  ThreadPool(int num_threads) : m_num_threads(num_threads) {
+  ThreadPool(int num_threads) : m_stop(false) {
     for (int i = 0; i < num_threads; i++) {
-      m_threads.push_back(new thread(&ThreadPool::execute, this));
+      m_threads.emplace_back(&ThreadPool::execute, this);
     }
-    m_stop = false;
   }
 
   ~ThreadPool() {
@@ -35,29 +34,32 @@ public:
   }
 
   void stop() {
-    {
-      unique_lock<mutex> lock(m_mutex);
-      m_stop = true;
-    }
+    m_stop = true;
     m_condition.notify_all();
   }
 
   void join() {
     for (auto &thread : m_threads) {
-      thread->join();
+      if (thread.joinable()) {
+        thread.join();
+      }
     }
   }
 
   void execute() {
     while (!m_stop) {
       unique_lock<mutex> lock(m_mutex);
-      while (m_list.empty()) {
-        m_condition.wait(lock);
+      m_condition.wait(lock, [this] { return m_stop || !m_list.empty(); });
+
+      if (m_stop && m_list.empty()) {
+        continue;
       }
+
       Task *task = m_list.front();
       m_list.pop_front();
       lock.unlock();
 
+      task->state = Running;
       task->run();
       task->state = Completed;
       m_condition.notify_one();
@@ -73,13 +75,12 @@ public:
     m_condition.notify_one();
   }
 
-  private:
-  int m_num_threads;
+private:
   vector<thread> m_threads;
   mutex m_mutex;
   condition_variable m_condition;
   list<Task *> m_list;
-  bool m_stop;
+  atomic<bool> m_stop;
 };
 
 int main() {
@@ -88,4 +89,3 @@ int main() {
 
   return 0;
 }
- 
