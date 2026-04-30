@@ -1,27 +1,25 @@
 "use strict";
 
 class Allc {
-  private items: number[];
-  // private items: Set<number>;
+  private items: Set<number>;
   private min: number;
   private max: number;
 
   constructor(min: number, max: number) {
     this.min = min;
     this.max = max;
-    this.items = [] as number[];
-    // new Set<number>();
+    this.items = new Set<number>();
 
     for (let i = min; i <= max; i++) {
-      this.items.push(i);
+      this.items.add(i);
     }
   }
 
   getFree(): number | null {
-    const first = this.items[0];
+    const first = this.items.values().next().value;
     if (first === undefined) return null;
 
-    this.items.shift();
+    this.items.delete(first);
     return first;
   }
 
@@ -30,11 +28,11 @@ class Allc {
       throw new Error("Not in range");
     }
     // found
-    if (this.items.indexOf(value) !== -1) {
+    if (!this.items.has(value)) {
       throw new Error("Not in allocted");
     }
 
-    this.items.push(value);
+    this.items.add(value);
   }
 
   private isInRange(value: number): boolean {
@@ -52,5 +50,3 @@ console.log(a.deAllocate(2));
 console.log(a.deAllocate(3));
 console.log(a.getFree());
 console.log(a.getFree());
-
-function main() {}
